@@ -4,19 +4,18 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+@Entity
 public class ServiceType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String name;
-    private double price;
-    private int durationInMinutes;
+    @GeneratedValue
+    private Long id;
 
-    @ManyToOne
-    private Salon salon;
+    private String navn;
+    private String beskrivelse;
+    private double pris;
+    private int varighedIMinutter;
 
-    @OneToMany(mappedBy = "serviceType")
-    private List<Booking> bookings;
-    public ServiceType() {
-    }
+    @OneToMany(mappedBy = "service")
+    private List<Booking> bookinger;
 }
+
