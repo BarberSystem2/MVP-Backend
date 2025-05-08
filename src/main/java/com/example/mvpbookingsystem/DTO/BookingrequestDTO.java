@@ -1,31 +1,36 @@
 package com.example.mvpbookingsystem.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class BookingrequestDTO {
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate bookingdate;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime bookingtime;
-    private String costumerName;
+    private String customerName;
     private Long employeeId;
     private Long salonId;
     private Long serviceTypeId;
 
 
-    public BookingrequestDTO(LocalDate bookingdate, LocalTime bookingtime, String costumerName, Long employeeId, Long salonId, Long serviceTypeId) {
+    public BookingrequestDTO(LocalDate bookingdate, LocalTime bookingtime, String customerName, Long employeeId, Long salonId, Long serviceTypeId) {
         this.bookingdate = bookingdate;
         this.bookingtime = bookingtime;
-        this.costumerName = costumerName;
+        this.customerName = customerName;
         this.employeeId = employeeId;
         this.salonId = salonId;
         this.serviceTypeId = serviceTypeId;
     }
-public String getCostumerName() {
-    return costumerName;
+public String getCustomerName() {
+    return customerName;
 }
-public void setCostumerName(String costumerId) {
-    this.costumerName = costumerName;
+public void setCustomerName(String customerName) {
+    this.customerName = customerName;
 }
 public Long getEmployeeId() {
     return employeeId;

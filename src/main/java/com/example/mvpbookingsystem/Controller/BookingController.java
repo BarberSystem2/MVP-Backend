@@ -23,6 +23,13 @@ public class BookingController {
 
     @PostMapping("/create")
     public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody BookingrequestDTO dto) {
+        System.out.println("Modtaget DTO:");
+        System.out.println("customerName: " + dto.getCustomerName());
+        System.out.println("bookingDate: " + dto.getBookingdate());
+        System.out.println("bookingTime: " + dto.getBookingtime());
+        System.out.println("employeeId: " + dto.getEmployeeId());
+        System.out.println("salonId: " + dto.getSalonId());
+        System.out.println("serviceTypeId: " + dto.getServiceTypeId());
         return ResponseEntity.ok(bookingService.createBooking(dto));
     }
     @GetMapping("/getbookings")

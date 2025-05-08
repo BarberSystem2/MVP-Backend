@@ -40,9 +40,9 @@ public class BookingService {
 
         Booking booking = new Booking();
         Customer customer1 = new Customer();
-        customer1.setFirstName(dto.getCostumerName());
-        customer1.setLastName(dto.getCostumerName());
-        customer1.setEmail(dto.getCostumerName() + "@gmail.com");
+        customer1.setFirstName(dto.getCustomerName());
+        customer1.setLastName(dto.getCustomerName());
+        customer1.setEmail(dto.getCustomerName() + "@gmail.com");
         customer1.setPhone(generateRandomPhoneNumber());
 
         customer1 = customerRepository.save(customer1);
