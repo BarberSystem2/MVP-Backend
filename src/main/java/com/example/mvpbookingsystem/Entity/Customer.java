@@ -15,6 +15,7 @@ public class Customer {
         private String lastName;
         @Column(unique=true)
         private String email;
+        @Column(unique=true)
         private String phone;
 
         @OneToMany(mappedBy = "customer")

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,15 +31,23 @@ public class BookingService {
 
     @Autowired
     ServiceTypeRepository serviceTypeRepository;
+    private static final Random random = new Random();
 
     public BookingResponseDTO createBooking(BookingrequestDTO dto) {
-        Customer customer = customerRepository.findById(dto.getCostumerId()).orElseThrow();
         Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElseThrow();
         ServiceType serviceType = serviceTypeRepository.findById(dto.getServiceTypeId()).orElseThrow();
         Salon salon = salonRepository.findById(dto.getSalonId()).orElseThrow();
 
         Booking booking = new Booking();
-        booking.setCustomer(customer);
+        Customer customer1 = new Customer();
+        customer1.setFirstName(dto.getCostumerName());
+        customer1.setLastName(dto.getCostumerName());
+        customer1.setEmail(dto.getCostumerName() + "@gmail.com");
+        customer1.setPhone(generateRandomPhoneNumber());
+
+        customer1 = customerRepository.save(customer1);
+
+        booking.setCustomer(customer1);
         booking.setEmployee(employee);
         booking.setServiceType(serviceType);
         booking.setDate(dto.getBookingdate());
@@ -69,7 +78,14 @@ public class BookingService {
                 booking.getServiceType().getServiceTypePrice()
         )).collect(Collectors.toList());
     }
-
+    private String generateRandomPhoneNumber() {
+        // Dansk telefonnummer (8 cifre)
+        StringBuilder phone = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            phone.append(random.nextInt(10));
+        }
+        return phone.toString();
+    }
 
 
 

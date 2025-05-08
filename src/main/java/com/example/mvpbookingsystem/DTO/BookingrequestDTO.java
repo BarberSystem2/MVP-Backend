@@ -7,25 +7,25 @@ public class BookingrequestDTO {
 
     private LocalDate bookingdate;
     private LocalTime bookingtime;
-    private Long costumerId;
+    private String costumerName;
     private Long employeeId;
     private Long salonId;
     private Long serviceTypeId;
 
 
-    public BookingrequestDTO(LocalDate bookingdate, LocalTime bookingtime, Long costumerId, Long employeeId, Long salonId, Long serviceTypeId) {
+    public BookingrequestDTO(LocalDate bookingdate, LocalTime bookingtime, String costumerName, Long employeeId, Long salonId, Long serviceTypeId) {
         this.bookingdate = bookingdate;
         this.bookingtime = bookingtime;
-        this.costumerId = costumerId;
+        this.costumerName = costumerName;
         this.employeeId = employeeId;
         this.salonId = salonId;
         this.serviceTypeId = serviceTypeId;
     }
-public Long getCostumerId() {
-    return costumerId;
+public String getCostumerName() {
+    return costumerName;
 }
-public void setCostumerId(Long costumerId) {
-    this.costumerId = costumerId;
+public void setCostumerName(String costumerId) {
+    this.costumerName = costumerName;
 }
 public Long getEmployeeId() {
     return employeeId;
