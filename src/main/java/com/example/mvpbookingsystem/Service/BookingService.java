@@ -62,7 +62,7 @@ public class BookingService {
                 saved.getServiceType().getServiceTypeName(),
                 saved.getServiceType().getServiceTypePrice(),
                 saved.getServiceType().getServiceTypeEstimatedMinutes(),
-                saved.getDate(),  // Use getDate() instead of getDate()
+                saved.getDate(),
                 saved.getStartTime()
         );
     }
