@@ -1,8 +1,6 @@
 package com.example.mvpbookingsystem.Service;
 
-import com.example.mvpbookingsystem.DTO.BookingListDTO;
-import com.example.mvpbookingsystem.DTO.BookingResponseDTO;
-import com.example.mvpbookingsystem.DTO.BookingrequestDTO;
+import com.example.mvpbookingsystem.DTO.*;
 import com.example.mvpbookingsystem.Entity.*;
 import com.example.mvpbookingsystem.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -27,33 +26,41 @@ public class BookingService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    SalonRepository salonRepository;
+    private SalonRepository salonRepository;
 
     @Autowired
-    ServiceTypeRepository serviceTypeRepository;
+    private ServiceTypeRepository serviceTypeRepository;
+
     private static final Random random = new Random();
 
     public BookingResponseDTO createBooking(BookingrequestDTO dto) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElseThrow();
         ServiceType serviceType = serviceTypeRepository.findById(dto.getServiceTypeId()).orElseThrow();
-        Salon salon = salonRepository.findById(dto.getSalonId()).orElseThrow();
+        Salon salon  = salonRepository.findById(dto.getSalonId()).orElseThrow();
 
         Booking booking = new Booking();
-        Customer customer1 = new Customer();
-        customer1.setFirstName(dto.getCustomerName());
-        customer1.setLastName(dto.getCustomerName());
-        customer1.setEmail(dto.getCustomerName() + "@gmail.com");
-        customer1.setPhone(generateRandomPhoneNumber());
+        Customer customer = new Customer();
+        customer.setFirstName(dto.getCustomerName());
+        customer.setLastName(dto.getCustomerName());
+        customer.setEmail(dto.getCustomerEmail());
+        customer.setPhone(dto.getCustomerPhoneNumber());
 
-        customer1 = customerRepository.save(customer1);
+        customer = customerRepository.save(customer);
 
-        booking.setCustomer(customer1);
+        booking.setCustomer(customer);
         booking.setEmployee(employee);
         booking.setServiceType(serviceType);
         booking.setDate(dto.getBookingdate());
+        booking.setSalon(salon);
         booking.setStartTime(dto.getBookingtime());
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime end = dto.getBookingtime()
+                .plusMinutes(serviceType.getServiceTypeEstimatedMinutes());
+        booking.setEndTime(LocalTime.parse(end.format(fmt)));
 
-        Booking saved = bookingRepository.saveAndFlush(booking);  // Save and flush
+        System.out.println(dto.getBookingtime().plusMinutes(serviceType.getServiceTypeEstimatedMinutes()));
+
+        Booking saved = bookingRepository.save(booking);
 
         return new BookingResponseDTO(
                 saved.getId(),
@@ -66,20 +73,23 @@ public class BookingService {
                 saved.getStartTime()
         );
     }
+
     public List<BookingListDTO> getAllBookings() {
-        return bookingRepository.findAll().stream().map(booking -> new BookingListDTO(
-                booking.getId().intValue(),
-                booking.getEmployee().getSalon().getName(), // Assuming employee has a salon
-                booking.getDate(),
-                booking.getStartTime(),
-                booking.getCustomer().getFirstName(), // Assuming there's a method or getFirstName + getLastName
-                booking.getEmployee().getName(), // Same here
-                booking.getServiceType().getServiceTypeName(),
-                booking.getServiceType().getServiceTypePrice()
-        )).collect(Collectors.toList());
+        return bookingRepository.findAll().stream()
+                .map(booking -> new BookingListDTO(
+                        booking.getId().intValue(),
+                        booking.getEmployee().getSalon().getName(),
+                        booking.getDate(),
+                        booking.getStartTime(),
+                        booking.getCustomer().getFirstName(),
+                        booking.getEmployee().getName(),
+                        booking.getServiceType().getServiceTypeName(),
+                        booking.getServiceType().getServiceTypePrice()
+                ))
+                .collect(Collectors.toList());
     }
+
     private String generateRandomPhoneNumber() {
-        // Dansk telefonnummer (8 cifre)
         StringBuilder phone = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             phone.append(random.nextInt(10));
@@ -87,6 +97,52 @@ public class BookingService {
         return phone.toString();
     }
 
+    public List<EmployeeCalenderDayDTO> getEmployeesWithBookingsForToday(Long salonId) {
+        LocalDate today = LocalDate.now();
 
+        return employeeRepository.findBySalonId(salonId).stream()
+                .map(employee -> new EmployeeCalenderDayDTO(
+                        employee.getId(),
+                        employee.getName(),
+                        employee.getImage(),
+                        employee.getBookings().stream()
+                                .filter(b -> b.getDate().isEqual(today))
+                                .map(this::toBookingListForDayDTO)
+                                .collect(Collectors.toList())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<EmployeeCalenderDayDTO> getEmployeesBookingListForTheDay(Long salonId, LocalDate date) {
+        return employeeRepository.findBySalonId(salonId).stream()
+                .map(employee -> new EmployeeCalenderDayDTO(
+                        employee.getId(),
+                        employee.getName(),
+                        employee.getImage(),
+                        employee.getBookings().stream()
+                                .filter(b -> b.getDate().isEqual(date))
+                                .map(this::toBookingListForDayDTO)
+                                .collect(Collectors.toList())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private BookingListForDayDTO toBookingListForDayDTO(Booking booking) {
+        String customerFullName = booking.getCustomer().getFirstName()
+                + " " + booking.getCustomer().getLastName();
+        String startTime = booking.getDate()
+                .atTime(booking.getStartTime()).toString();
+        String endTime = booking.getDate()
+                .atTime(booking.getEndTime()).toString();
+
+        return new BookingListForDayDTO(
+                booking.getId(),
+                customerFullName,
+                booking.getServiceType().getServiceTypeName(),
+                booking.getServiceType().getServiceTypePrice(),
+                startTime,
+                endTime
+        );
+    }
 
 }

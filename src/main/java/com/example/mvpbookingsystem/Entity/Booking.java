@@ -10,34 +10,42 @@ import java.time.LocalTime;
 @Entity
 public class Booking {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private LocalDate date;
+
+    @Column(nullable = false)
     private LocalTime startTime;
+
+    @Column(nullable = false)
     private LocalTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @ManyToOne(optional = false)
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @ManyToOne(optional = false)
     private Employee employee;
 
-    @ManyToOne
-    @JoinColumn(name = "service_id")
+    @ManyToOne(optional = false)
     private ServiceType serviceType;
 
-    public Booking() {}
+    @ManyToOne (optional = false)
+    private Salon salon;
 
-    public Booking(LocalDate date, LocalTime startTime, LocalTime endTime, Customer customer, Employee employee, ServiceType serviceType) {
+    public Booking() {
+    }
+
+    public Booking(LocalDate date, LocalTime startTime, LocalTime endTime, Customer customer, Employee employee, ServiceType serviceType, Salon salon) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.customer = customer;
         this.employee = employee;
         this.serviceType = serviceType;
+        this.salon = salon;
+
     }
     public Long getId() {
         return id;
@@ -80,6 +88,12 @@ public class Booking {
     }
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
+    }
+    public Salon getSalon() {
+        return salon;
+    }
+    public void setSalon(Salon salon) {
+        this.salon = salon;
     }
 
 }

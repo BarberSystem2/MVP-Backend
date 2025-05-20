@@ -13,15 +13,19 @@ public class BookingrequestDTO {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime bookingtime;
     private String customerName;
+    private String customerEmail;
+    private String customerPhoneNumber;
     private Long employeeId;
     private Long salonId;
     private Long serviceTypeId;
 
 
-    public BookingrequestDTO(LocalDate bookingdate, LocalTime bookingtime, String customerName, Long employeeId, Long salonId, Long serviceTypeId) {
+    public BookingrequestDTO(LocalDate bookingdate, LocalTime bookingtime, String customerName, String customerEmail, String customerPhoneNumber, Long employeeId, Long salonId, Long serviceTypeId) {
         this.bookingdate = bookingdate;
         this.bookingtime = bookingtime;
         this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerPhoneNumber = customerPhoneNumber;
         this.employeeId = employeeId;
         this.salonId = salonId;
         this.serviceTypeId = serviceTypeId;
@@ -61,6 +65,18 @@ public LocalTime getBookingtime() {
 }
 public void setBookingtime(LocalTime bookingtime) {
         this.bookingtime = bookingtime;
+}
+public String getCustomerEmail() {
+        return customerEmail;
+}
+public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+}
+public String getCustomerPhoneNumber() {
+        return customerPhoneNumber;
+}
+public void setCustomerPhoneNumber(String customerPhoneNumber) {
+        this.customerPhoneNumber = customerPhoneNumber;
 }
 
 

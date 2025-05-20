@@ -3,10 +3,7 @@ package com.example.mvpbookingsystem.Controller;
 import com.example.mvpbookingsystem.DTO.ServiceTypeList;
 import com.example.mvpbookingsystem.Service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +18,9 @@ public class ServiceTypeController {
     @GetMapping("/getAll")
     public List<ServiceTypeList> getAllServiceType(){
        return serviceTypeService.getAllServiceTypes();
+    }
+    @GetMapping("/employee/{employeeId}")
+    public List<ServiceTypeList> getServiceTypeByEmployeeId(@PathVariable Long employeeId){
+        return serviceTypeService.getServiceTypesByEmployeeId(employeeId);
     }
 }

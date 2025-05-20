@@ -22,4 +22,13 @@ public class ServiceTypeService {
                         ser.getServiceTypePrice(),
                         ser.getServiceTypeEstimatedMinutes())).collect(Collectors.toList());
     }
+
+    public List<ServiceTypeList> getServiceTypesByEmployeeId(Long employeeId) {
+        List<ServiceType> serviceTypes = serviceTypeRepository.findByEmployees_Id(employeeId);
+        return serviceTypes.stream().map(serviceType -> new ServiceTypeList(
+                serviceType.getServiceTypeId(),
+                serviceType.getServiceTypeName(),
+                serviceType.getServiceTypePrice(),
+                serviceType.getServiceTypeEstimatedMinutes())).collect(Collectors.toList());
+    }
 }

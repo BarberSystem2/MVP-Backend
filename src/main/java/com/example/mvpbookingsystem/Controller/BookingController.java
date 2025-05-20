@@ -1,8 +1,6 @@
 package com.example.mvpbookingsystem.Controller;
 
-import com.example.mvpbookingsystem.DTO.BookingListDTO;
-import com.example.mvpbookingsystem.DTO.BookingResponseDTO;
-import com.example.mvpbookingsystem.DTO.BookingrequestDTO;
+import com.example.mvpbookingsystem.DTO.*;
 import com.example.mvpbookingsystem.Entity.Booking;
 import com.example.mvpbookingsystem.Service.BookingService;
 import org.hibernate.annotations.AnyKeyJavaClass;
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,4 +36,17 @@ public class BookingController {
         return bookingService.getAllBookings();
     }
 
+    @GetMapping("/getBooking/{salonId}")
+    public List<EmployeeCalenderDayDTO> getBooking(@PathVariable Long salonId) {
+        return bookingService.getEmployeesWithBookingsForToday(salonId);
+    }
+
+    @GetMapping("/getBooking/{salonId}/{date}")
+    public ResponseEntity<List<EmployeeCalenderDayDTO>> getBookings(
+            @PathVariable Long salonId,
+            @PathVariable String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        List<EmployeeCalenderDayDTO> bookings = bookingService.getEmployeesBookingListForTheDay(salonId, localDate);
+        return ResponseEntity.ok(bookings);
+    }
 }
