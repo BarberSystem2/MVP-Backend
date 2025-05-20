@@ -3,12 +3,15 @@ package com.example.mvpbookingsystem.Entity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class ServiceType {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -16,18 +19,21 @@ public class ServiceType {
     private int price;
     private int estimatedMinutes;
 
+    @ManyToMany(mappedBy = "serviceTypes")
+    private Set<Employee> employees = new HashSet<>();
+
     @OneToMany(mappedBy = "serviceType")
     private List<Booking> bookings = new ArrayList<>();
+
+    public ServiceType() {
+    }
+
 
     public ServiceType(String name, String description, int price, int estimatedMinutes) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.estimatedMinutes = estimatedMinutes;
-    }
-
-    public ServiceType() {
-
     }
 
     public Long getServiceTypeId() {
